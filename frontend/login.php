@@ -1,7 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
 <?php
-include_once '../backend/php/login.php'
+require '../backend/bd/Conexion.php';
+include '../backend/php/login.php';
+
+try {
+  $settings = $connect->prepare("SELECT nomem, foto FROM settings");
+  $settings->execute();
+  $setting = $settings->fetch(PDO::FETCH_ASSOC);
+} catch (PDOException $e) {
+  die("Error occurred:" . $e->getMessage());
+}
 ?>
 <head>
   <meta charset="UTF-8" />
