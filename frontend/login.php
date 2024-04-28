@@ -1,9 +1,7 @@
 <?php
+require_once('../backend/bd/Conexion.php');
+include_once('../backend/php/login.php');
 
-
-$settings = $connect->prepare("SELECT nomem, foto FROM settings");
-$settings->execute();
-$setting = $settings->fetch(PDO::FETCH_ASSOC);
 
 ?>
 <!DOCTYPE html>
