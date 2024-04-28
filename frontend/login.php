@@ -37,9 +37,11 @@ $setting = $settings->fetch(PDO::FETCH_ASSOC);
 
     ?>
     <form action="" method="POST" autocomplete="off">
-      <input type="text" name="username" value="<?php if (isset($_POST['username']))
-        echo $_POST['username'] ?>"
-          autocomplete="off" class="form-input span-2" placeholder="Nombre de usuario o NUIP" />
+      
+        <input type="text" name="username" value="<?php echo isset($_POST['username']) ?
+        htmlspecialchars($_POST['username']) : '' ?>" autocomplete="off" class="form-input span-2" 
+        placeholder="Nombre de usuario o NUIP" />
+
         <input type="password" required="true" name="password"
           value="<?php if (isset($_POST['password']))
         echo MD5($_POST['password']) ?>" class="form-input span-2"
