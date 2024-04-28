@@ -1,6 +1,6 @@
 <?php
 require '../backend/bd/Conexion.php';
-include_once('../backend/php/login.php');
+include '../backend/php/login.php';
 
 try {
   $settings = $connect->prepare("SELECT nomem, foto FROM settings");
