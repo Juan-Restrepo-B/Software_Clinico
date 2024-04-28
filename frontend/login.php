@@ -1,6 +1,5 @@
 <?php
 require '../backend/bd/Conexion.php';
-include '../backend/php/login.php';
 
 $settings = $connect->prepare("SELECT nomem, foto FROM settings");
 $settings->execute();
