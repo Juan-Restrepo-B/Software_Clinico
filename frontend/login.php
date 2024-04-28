@@ -1,4 +1,11 @@
+<?php
 
+
+$settings = $connect->prepare("SELECT nomem, foto FROM settings");
+$settings->execute();
+$setting = $settings->fetch(PDO::FETCH_ASSOC);
+
+?>
 <!DOCTYPE html>
 <html lang="es">
 
