@@ -7,6 +7,9 @@ $settings = $connect->prepare("SELECT nomem, foto FROM settings");
 $settings->execute();
 $setting = $settings->fetch(PDO::FETCH_ASSOC);
 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -37,7 +40,7 @@ $setting = $settings->fetch(PDO::FETCH_ASSOC);
 
     ?>
     <form action="" method="POST" autocomplete="off">
-      
+
         <input type="text" name="username" value="<?php echo isset($_POST['username']) ?
         htmlspecialchars($_POST['username']) : '' ?>" autocomplete="off" class="form-input span-2" 
         placeholder="Nombre de usuario o NUIP" />
