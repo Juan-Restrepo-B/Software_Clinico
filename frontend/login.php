@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <?php
-require '../backend/bd/Conexion.php';
-include '../backend/php/login.php';
+require_once( '../backend/bd/Conexion.php');
+include_once('../backend/php/login.php');
 
 try {
   $settings = $connect->prepare("SELECT nomem, foto FROM settings");
