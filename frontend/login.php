@@ -1,5 +1,4 @@
 <?php
-require '../backend/bd/Conexion.php';
 
 ?>
 <!DOCTYPE html>
