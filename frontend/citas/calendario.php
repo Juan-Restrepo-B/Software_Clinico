@@ -10,7 +10,18 @@
 ?>
  <?php 
     require_once('../../backend/bd/Conexion.php');
-$req = $connect->prepare("SELECT id, title, start, end, color FROM events");
+$req = $connect->prepare("SELECT id, title, start, end, color, 
+                        CONCAT(
+                            COALESCE(d.nodoc, ' '), ' ', 
+                            COALESCE(d.apdoc, ' '),
+                            COALESCE(n.nomnur, ' '), ' ', 
+                            COALESCE(n.apenur, ' ')
+                        ) AS doctor
+                        FROM events e
+                        INNER JOIN docnur dn ON dn.iddocnur = e.iddocnur
+                        INNER JOIN patients p ON e.idpa = p.idpa
+                        LEFT JOIN doctor d ON dn.idodc = d.idodc 
+                        LEFT JOIN nurse n ON dn.idnur = n.idnur");
 $req->execute();
 $events = $req->fetchAll();
      ?>
@@ -257,7 +268,7 @@ $events = $req->fetchAll();
       ?>
         {
           id: '<?php echo $event['id']; ?>',
-          title: '<?php echo $event['title']; ?>',
+          title: '<?php echo $event['doctor']; ?>',
           start: '<?php echo $start; ?>',
           end: '<?php echo $end; ?>',
           color: '<?php echo $event['color']; ?>',

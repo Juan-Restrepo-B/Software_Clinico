@@ -26,7 +26,8 @@ class PDF extends FPDF
         INNER JOIN patients p ON e.idpa = p.idpa  -- Corrected s.idpa to e.idpa
         LEFT JOIN doctor d ON dn.idodc = d.idodc 
         LEFT JOIN nurse n ON dn.idnur = n.idnur
-        INNER JOIN laboratory l ON e.idlab = l.idlab
+        LEFT JOIN event_labs el ON el.event_id = e.ideve
+        LEFT JOIN laboratory l ON el.idlab = l.idlab
         WHERE e.id= '$id'");
         $doc->execute();
         $users = $doc->fetch(PDO::FETCH_ASSOC);
@@ -100,7 +101,8 @@ $pdf->SetFont('Arial','B',10);
     INNER JOIN patients p ON e.idpa = p.idpa
     LEFT JOIN doctor d ON dn.idodc = d.idodc 
     LEFT JOIN nurse n ON dn.idnur = n.idnur
-    INNER JOIN laboratory l ON e.idlab = l.idlab
+    LEFT JOIN event_labs el ON el.event_id = e.ideve
+    LEFT JOIN laboratory l ON el.idlab = l.idlab
     WHERE e.id = :id");
     $stmt->bindParam(':id', $id, PDO::PARAM_INT);
     $stmt->execute();
@@ -124,11 +126,11 @@ while($row = $stmt->fetch()){
 
         $pdf->setX(95);
         $pdf->Cell(40,6,'Subtotal',1,0);
-        $pdf->Cell(60,6,'S/'.($row['monto']),'1',1,'R');
+        $pdf->Cell(60,6,'$ '.($row['monto']),'1',1,'R');
         $pdf->setX(95);
         
         $pdf->Cell(40,6,'Total',1,0);
-        $pdf->Cell(60,6,'S/'.($row['monto']),'1',1,'R');
+        $pdf->Cell(60,6,'$ '.($row['monto']),'1',1,'R');
 
 
 }

@@ -883,6 +883,7 @@ input[type=text], input[type=password], input[type=date],input[type=datetime-loc
   display: inline-block;
   border: none;
   background: #f1f1f1;
+  border: solid 1px;
 }
 
 input[type=text]:focus, input[type=password]:focus {

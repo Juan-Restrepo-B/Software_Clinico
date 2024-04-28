@@ -168,13 +168,21 @@
                                 $sentencia = $connect->prepare("SELECT e.id, e.title, p.idpa, 
                                 p.numhs, p.nompa, p.apepa, d.idodc, d.ceddoc, 
                                 d.nodoc, d.apdoc, l.idlab, l.nomlab, e.start, 
-                                e.end, e.color, e.state, e.chec, e.monto 
+                                e.end, e.color, e.state, e.chec, e.monto,
+                                CONCAT(
+                                    COALESCE(d.nodoc, ' '), ' ', 
+                                    COALESCE(d.apdoc, ' '),
+                                    COALESCE(n.nomnur, ' '), ' ', 
+                                    COALESCE(n.apenur, ' ')
+                                ) AS doctor
                                 FROM events e
                                 INNER JOIN docnur dn ON dn.iddocnur = e.iddocnur
                                 INNER JOIN patients p ON e.idpa = p.idpa
                                 LEFT JOIN doctor d ON dn.idodc = d.idodc 
                                 LEFT JOIN nurse n ON dn.idnur = n.idnur
-                                INNER JOIN laboratory l ON e.idlab = l.idlab ORDER BY id DESC;");
+                                LEFT JOIN event_labs el ON el.event_id = e.ideve
+                                LEFT JOIN laboratory l ON el.idlab = l.idlab
+                                ORDER BY id DESC;");
                                 $sentencia->execute();
                                 $data =  array();
                             if($sentencia){
@@ -203,7 +211,7 @@
                     <tr>
                         <th scope="row"><?php echo mb_convert_case(mb_strtolower($d->nompa, "UTF-8"), MB_CASE_TITLE, "UTF-8"); ?>&nbsp;<?php echo mb_convert_case(mb_strtolower($d->apepa, "UTF-8"), MB_CASE_TITLE, "UTF-8"); ?></th>
                         <td data-title="Cita"><?php echo mb_convert_case(mb_strtolower($d->title, "UTF-8"), MB_CASE_TITLE, "UTF-8"); ?></td>
-                        <td data-title="Médico"><?php echo mb_convert_case(mb_strtolower($d->nodoc, "UTF-8"), MB_CASE_TITLE, "UTF-8"); ?>&nbsp;<?php echo mb_convert_case(mb_strtolower($d->apdoc, "UTF-8"), MB_CASE_TITLE, "UTF-8"); ?></td>
+                        <td data-title="Médico"><?php echo mb_convert_case(mb_strtolower($d->doctor, "UTF-8"), MB_CASE_TITLE, "UTF-8")?></td>
                         <td data-title="Laboratorio"><?php echo mb_convert_case(mb_strtolower($d->nomlab, "UTF-8"), MB_CASE_TITLE, "UTF-8"); ?></td>
                         <td data-title="Fecha inicio"><?php echo $d->start ?></td>
                         <td data-title="Fecha fin"><?php echo $d->end ?></td>

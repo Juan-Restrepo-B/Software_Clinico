@@ -1,34 +1,19 @@
 <?php
-require_once('../../backend/bd/Conexion.php');
+require_once ('../../backend/bd/Conexion.php');
 
 if (isset($_POST['add_appointment'])) {
     $title = trim($_POST['appnam']);
     $idpa = trim($_POST['apppac']);
-    $idodc = trim($_POST['appdoc']); // Assuming this is supposed to be `iddocnur`
+    $idodc = trim($_POST['appdoc']);
     $color = trim($_POST['appco']);
     $start = $_POST['appini'];
     $end = $_POST['appfin'];
     $monto = $_POST['appmont'];
     $chec = isset($_POST['appreal']) ? 1 : 0;
 
-    // Validate the existence of iddocnur in docnur table
-    $checkDoc = $connect->prepare("SELECT iddocnur FROM docnur WHERE iddocnur = :idodc");
-    $checkDoc->bindParam(':idodc', $idodc);
-    $checkDoc->execute();
-    if ($checkDoc->rowCount() == 0) {
-        echo '<script type="text/javascript">
-            swal("Error!", "Doctor/Nurse ID provided does not exist.", "error").then(function() {
-                window.location = "nuevo.php";
-            });
-            </script>';
-        exit;
-    }
-
-    // Proceed with insertion if the foreign key exists
     try {
-        $stmt = $connect->prepare("INSERT INTO events 
-        (title, idpa, iddocnur, color, start, end, state, monto, chec) 
-        VALUES (:title, :idpa, :idodc, :color, :start, :end, 1, :monto, :chec)");
+        // Insertar el evento principal
+        $stmt = $connect->prepare("INSERT INTO events (title, idpa, iddocnur, color, start, end, state, monto, chec) VALUES (:title, :idpa, :idodc, :color, :start, :end, 1, :monto, :chec)");
         $stmt->bindParam(':title', $title);
         $stmt->bindParam(':idpa', $idpa);
         $stmt->bindParam(':idodc', $idodc);
@@ -37,20 +22,35 @@ if (isset($_POST['add_appointment'])) {
         $stmt->bindParam(':end', $end);
         $stmt->bindParam(':monto', $monto);
         $stmt->bindParam(':chec', $chec);
-
         $stmt->execute();
         $event_id = $connect->lastInsertId();
 
+        // Insertar las relaciones de laboratorio si existen
         if (!empty($_POST['applab'])) {
             foreach ($_POST['applab'] as $lab_id) {
                 $lab_id = trim($lab_id);
-                $stmtLab = $connect->prepare("INSERT INTO event_labs (event_id, lab_id) VALUES (:event_id, :lab_id)");
+                $stmtLab = $connect->prepare("INSERT INTO event_labs (event_id, idlab) VALUES (:event_id, :lab_id)");
                 $stmtLab->bindParam(':event_id', $event_id);
                 $stmtLab->bindParam(':lab_id', $lab_id);
                 $stmtLab->execute();
             }
         }
-        header('Location: ../../frontend/citas/nuevo.php');
+
+        // Consulta del ultimo ID de los Events
+        $stmtTemp = $connect->prepare("SELECT MAX(id) as max_id FROM events");
+        $stmtTemp->execute();
+        $result = $stmtTemp->fetch(PDO::FETCH_ASSOC);
+        if ($result && isset($result['max_id'])) {
+            $idevent = $result['max_id'];
+        } else {
+            $idevent = null;
+        }
+
+        // Actualizar el evento con alguna información adicional post-insert
+        $updateStmt = $connect->prepare("UPDATE events SET ideve = :event_id WHERE id = :id");
+        $updateStmt->bindParam(':id', $idevent);
+        $updateStmt->bindParam(':event_id', $event_id);
+        $updateStmt->execute();
 
         echo '<script type="text/javascript">
             swal("¡Registrado!", "Se reservó la cita correctamente", "success").then(function() {

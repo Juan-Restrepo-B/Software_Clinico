@@ -7,7 +7,7 @@ if (!isset($_SESSION['rol']) || $_SESSION['rol'] != 1) {
 
     $id = $_SESSION['id'];
 }
-require_once('../../backend/bd/Conexion.php');
+require_once ('../../backend/bd/Conexion.php');
 
 $settings = $connect->prepare("SELECT nomem, foto FROM settings");
 $settings->execute();
@@ -23,7 +23,7 @@ $setting = $settings->fetch(PDO::FETCH_ASSOC);
     <link rel="stylesheet" href="../../backend/css/admin.css">
     <link rel="icon" type="image/png" sizes="96x96" href="../../backend/img/ico.svg">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/6.6.9/sweetalert2.min.css">
-    
+
     <title><?php echo htmlspecialchars($setting['nomem']); ?> | Nueva Cita</title>
 
 </head>
@@ -32,7 +32,9 @@ $setting = $settings->fetch(PDO::FETCH_ASSOC);
 
     <!-- SIDEBAR -->
     <section id="sidebar">
-        <a href="../admin/escritorio.php" class="brand"><img src="../../backend/img/subidas/<?php echo htmlspecialchars($setting['foto']); ?>" alt="Logo Clinica"></a>
+        <a href="../admin/escritorio.php" class="brand"><img
+                src="../../backend/img/subidas/<?php echo htmlspecialchars($setting['foto']); ?>"
+                alt="Logo Clinica"></a>
 
         <ul class="side-menu">
             <li><a href="../admin/escritorio.php"><i class='bx bxs-dashboard icon'></i> Dashboard</a></li>
@@ -165,7 +167,8 @@ $setting = $settings->fetch(PDO::FETCH_ASSOC);
             <!-- multistep form -->
 
 
-            <form action="../../backend/php/add_appointment.php" method="POST" enctype="multipart/form-data" autocomplete="off">
+            <form action="" method="POST" enctype="multipart/form-data"
+                autocomplete="off">
 
                 <div class="containerss">
                     <h1>Nueva cita</h1>
@@ -178,42 +181,53 @@ $setting = $settings->fetch(PDO::FETCH_ASSOC);
                     </div>
                     <hr>
                     <br>
-                    <label for="email"><b>Motivo de la cita</b></label><span class="badge-warning">*</span>
-                    <textarea name="appnam" style="height:200px" placeholder="Write something.."> </textarea>
-
+                    
                     <label for="psw"><b>Nombre del paciente</b></label><span class="badge-warning">*</span>
-                    <select required name="apppac" id="pati">
+                    <select required name="apppac" id="pati" style="border: solid 1px; border-radius: 5px;">
                         <option>Seleccione</option>
                     </select>
 
                     <label for="psw"><b>Nombre profesional</b></label><span class="badge-warning">*</span>
-                    <select required id="doc" name="appdoc">
+                    <select required id="doc" name="appdoc" style="border: solid 1px; border-radius: 5px;">
                         <option>Seleccione</option>
                     </select>
 
                     <label for="email"><b>Especialidad</b></label><span class="badge-warning">*</span>
 
-                    <select disabled id="spe" name="appdoc">
+                    <select disabled id="spe" name="appdoc" style="border: solid 1px; border-radius: 5px;">
                         <option>Seleccione</option>
                     </select>
 
 
                     <label for="psw"><b>Tipo Cita</b></label><span class="badge-warning">*</span>
-                    <select id="lab" multiple>
-                        <option>Seleccione</option>
-                    </select>
-
-                    <!-- Botones para mover opciones entre selectores -->
-                    <button type="button" onclick="moveToSelected()">Agregar →</button>
-                    <button type="button" onclick="moveToAvailable()">← Quitar</button>
-
-                    <!-- Select para las opciones seleccionadas que se enviarán -->
-                    <select required id="labs" name="applab[]" multiple onchange="updateTotal()">
-                    </select>
-
+                    <div class="TipC" style="display: flex; gap: 1rem;">
+                        <div class="tpA" style=" width: 45%;">
+                            <br>
+                            <select id="lab" multiple style=" width: 100%; border: solid 1px; border-radius: 5px;">
+                            </select>
+                        </div>
+                        <div class="btntc"
+                            style="display: flex; justify-content: center; align-items: center; flex-direction: column;">
+                            <!-- Botones para mover opciones entre selectores -->
+                            <button type="button" onclick="moveToSelected()" style="width: 90px; padding: 5px 10px; border: solid 1px; border-radius: 5px;">Agregar →</button>
+                            <br>
+                            <button type="button" onclick="moveToAvailable()" style="width: 90px; padding: 5px 10px; border: solid 1px; border-radius: 5px;">← Quitar</button>
+                        </div>
+                        <div class="tpB" style=" width: 45%;">
+                            <br>
+                            <!-- Select para las opciones seleccionadas que se enviarán -->
+                            <select required id="labs" name="applab[]" multiple onchange="updateTotal()"
+                                style=" width: 100%; border: solid 1px; border-radius: 5px;">
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <label for="email"><b>Motivo de la cita</b></label><span class="badge-warning">*</span>
+                    <textarea name="appnam" style="height:200px; border: solid 1px; border-radius: 5px;"
+                        placeholder="Write something.."> </textarea>
 
                     <label for="psw"><b>Prioridad</b></label><span class="badge-warning">*</span>
-                    <select required name="appco" id="gep">
+                    <select required name="appco" id="gep" style="border: solid 1px; border-radius: 5px;">
                         <option style="color:#8B0000;" value="Alta">&#9724; Alta</option>
                         <option style="color:#FFFF00;" value="Media">&#9724; Media</option>
                         <option style="color:#FFB6C1;" value="Baja">&#9724; Baja</option>
@@ -222,10 +236,12 @@ $setting = $settings->fetch(PDO::FETCH_ASSOC);
                     </select>
 
                     <label for="email"><b>Fecha inicial</b></label><span class="badge-warning">*</span>
-                    <input type="datetime-local" name="appini" required="">
+                    <input type="datetime-local" name="appini" required=""
+                        style="border: solid 1px; border-radius: 5px;">
 
                     <label for="email"><b>Fecha final</b></label><span class="badge-warning">*</span>
-                    <input type="datetime-local" name="appfin" required="">
+                    <input type="datetime-local" name="appfin" required=""
+                        style="border: solid 1px; border-radius: 5px;">
 
                     <label for="email"><b>Monto a pagar</b></label><span class="badge-warning">*</span>
                     <div id="total">Total: $0.0</div>
@@ -249,7 +265,7 @@ $setting = $settings->fetch(PDO::FETCH_ASSOC);
         <!-- MAIN -->
     </section>
     <script src="../../backend/js/jquery.min.js"></script>
-
+    <script src="../../backend/php/add_appointment.php"></script>
 
     <!-- NAVBAR -->
 
@@ -261,18 +277,18 @@ $setting = $settings->fetch(PDO::FETCH_ASSOC);
     <script src="../../backend/js/laboratory.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js"></script>
     <script>
-    function moveToSelected() {
-        var available = document.getElementById('lab');
-        var selected = document.getElementById('labs');
-        var selectedOptions = Array.from(available.selectedOptions);
-        
-        selectedOptions.forEach(option => {
-            selected.appendChild(option);  // Moves the option to the selected list
-            option.selected = true;  // Ensure the option is selected for form submission
-        });
+        function moveToSelected() {
+            var available = document.getElementById('lab');
+            var selected = document.getElementById('labs');
+            var selectedOptions = Array.from(available.selectedOptions);
 
-        updateTotal();  // Update the total whenever an option is moved
-    }
+            selectedOptions.forEach(option => {
+                selected.appendChild(option);  // Moves the option to the selected list
+                option.selected = true;  // Ensure the option is selected for form submission
+            });
+
+            updateTotal();  // Update the total whenever an option is moved
+        }
 
         function moveToAvailable() {
             var available = document.getElementById('lab');
@@ -287,7 +303,7 @@ $setting = $settings->fetch(PDO::FETCH_ASSOC);
             updateTotal();  // Update the total whenever an option is moved
         }
 
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('#labs').change(updateTotal);  // Update the total when the selection changes
         });
 
@@ -295,10 +311,10 @@ $setting = $settings->fetch(PDO::FETCH_ASSOC);
             var selectedIds = $('#labs').val();
 
             if (selectedIds && selectedIds.length > 0) {
-                $.post('../../frontend/funciones/monto.php', { continente: selectedIds }, function(response) {
+                $.post('../../frontend/funciones/monto.php', { continente: selectedIds }, function (response) {
                     $('#total').text('Total: $' + response);
                     $('#appmont').val(response);  // Update the hidden input field as well
-                }).fail(function(xhr) {
+                }).fail(function (xhr) {
                     console.error("Error: " + xhr.responseText);
                     alert("Error al procesar la solicitud.");
                 });

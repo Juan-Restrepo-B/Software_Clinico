@@ -46,7 +46,8 @@ $pdf->setX(5);
     INNER JOIN patients p ON e.idpa = p.idpa
     LEFT JOIN doctor d ON dn.idodc = d.idodc 
     LEFT JOIN nurse n ON dn.idnur = n.idnur
-    INNER JOIN laboratory l ON e.idlab = l.idlab
+    LEFT JOIN event_labs el ON el.event_id = e.ideve
+    LEFT JOIN laboratory l ON el.idlab = l.idlab
     WHERE e.id= '$id'");
 $stmt->setFetchMode(PDO::FETCH_ASSOC);
 $stmt->execute();
