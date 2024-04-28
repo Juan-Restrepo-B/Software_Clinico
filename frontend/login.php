@@ -1,7 +1,4 @@
 <?php
-require_once('../backend/bd/Conexion.php');
-include_once('../backend/php/login.php');
-
 
 ?>
 <!DOCTYPE html>
